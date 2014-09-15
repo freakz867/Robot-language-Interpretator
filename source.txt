@@ -1,0 +1,160 @@
+TASK FINDEXIT arg1(
+VAR testvar [3] = 1
+VAR testvar3 = 5
+VAR testvar2 = 1
+DO getOut testvar
+RESULT testvar
+)
+
+VAR newvar2 [1,2] = 5
+
+TASK getOut arg(
+VAR testvar2 = 1
+VAR coord=0
+VAR wall=0
+VAR isWall = 0
+VAR isWallLeft = 0
+VAR direction = 2
+VAR temp [8]=0
+VAR res1 [3,3,5]=2
+VAR res2 [3,3,3]=3
+VAR res3 [3,3,3]=2
+VAR res4 [3,3,3,3,3,3,3,3]=0
+VAR counter = 0
+VAR bound = 100
+VAR step = 1
+FOR counter BOUNDARY bound STEP step(
+    DO checkWallLeft direction
+    isWallLeft=GET checkWallLeft
+    SWITCH MXEQ isWallLeft TRUE(
+        DO changeDirectionToLeft direction
+        direction=GET changeDirectionToLeft
+        ROTATE LEFT
+        MOVE
+    ) FALSE(
+        DO checkWall direction
+        isWall=GET checkWall
+        SWITCH MXEQ isWall TRUE(
+            MOVE
+        ) FALSE(
+            DO changeDirectionToRight direction
+            direction=GET changeDirectionToRight
+            ROTATE RIGHT
+        )
+    )
+)
+RESULT temp
+)
+
+TASK changeDirectionToLeft arg1(
+VAR up=8
+VAR down=2
+VAR left=4
+VAR right=6
+VAR newDirection=0
+up=up-arg1
+down=down-arg1
+left=left-arg1
+right=right-arg1
+SWITCH MXEQ up TRUE(
+    newDirection=4
+)
+SWITCH MXEQ down TRUE(
+    newDirection=6
+)
+SWITCH MXEQ left TRUE(
+    newDirection=2
+)
+SWITCH MXEQ right TRUE(
+    newDirection=8
+)
+RESULT newDirection
+)
+
+
+TASK checkWall arg1(
+VAR up=8
+VAR down=2
+VAR left=4
+VAR right=6
+VAR res=5
+up=up-arg1
+down=down-arg1
+left=left-arg1
+right=right-arg1
+VAR temp [9]=0
+VAR view [3,3,3,3,3,3,3,3,3]=0
+view=GET ENVIRONMENT
+temp=view[3,3,3,3,3,3,3,3,3]
+SWITCH MXEQ up TRUE(
+res=temp[2]-2
+)
+SWITCH MXEQ down TRUE(
+res=temp[8]-2
+)
+SWITCH MXEQ left TRUE(
+res=temp[4]-2
+)
+SWITCH MXEQ right TRUE(
+res=temp[6]-2
+)
+RESULT res
+)
+
+TASK checkWallLeft arg1(
+VAR up=8
+VAR down=2
+VAR left=4
+VAR right=6
+VAR res=5
+VAR arg2=0
+arg2=arg1
+DO changeDirectionToLeft arg2
+arg2=GET changeDirectionToLeft
+up=up-arg2
+down=down-arg2
+left=left-arg2
+right=right-arg2
+VAR temp [9]=0
+VAR view [3,3,3,3,3,3,3,3,3]=0
+view=GET ENVIRONMENT
+temp=view[3,3,3,3,3,3,3,3,3]
+SWITCH MXEQ up TRUE(
+res=temp[2]-2
+)
+SWITCH MXEQ down TRUE(
+res=temp[8]-2
+)
+SWITCH MXEQ left TRUE(
+res=temp[4]-2
+)
+SWITCH MXEQ right TRUE(
+res=temp[6]-2
+)
+RESULT res
+)
+
+TASK changeDirectionToRight arg1(
+VAR up=8
+VAR down=2
+VAR left=4
+VAR right=6
+VAR newDirection=0
+up=up-arg1
+down=down-arg1
+left=left-arg1
+right=right-arg1
+SWITCH MXEQ up TRUE(
+    newDirection=6
+)
+SWITCH MXEQ down TRUE(
+    newDirection=4
+)
+SWITCH MXEQ left TRUE(
+    newDirection=8
+)
+SWITCH MXEQ right TRUE(
+    newDirection=2
+)
+RESULT newDirection
+)
